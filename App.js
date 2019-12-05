@@ -24,6 +24,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 const App: () => React$Node = () => {
   return (
     <>
@@ -64,8 +67,12 @@ const App: () => React$Node = () => {
                 Read the docs to discover what to do next:
               </Text>
             </View>
-            <LearnMoreLinks />
           </View>
+
+          <Button
+              title="Outline button"
+              type="outline"
+            />
         </ScrollView>
       </SafeAreaView>
     </>
