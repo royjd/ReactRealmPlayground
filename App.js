@@ -23,15 +23,12 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { Button, Header } from 'react-native-elements';
-import MyHeader from './components/MyHeader';
-import MyTodoLists from './components/MyTodoLists';
+import MyApp from './components/MyApp';
 
 const App: () => React$Node = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <MyHeader />
-      <MyTodoLists/>
+      <MyApp></MyApp>
     </>
   );
 };

@@ -1,17 +1,18 @@
-const Realm = require('realm');
 import React, { Component } from 'react';
 
-import {  Header } from 'react-native-elements';
+import {  Header, Button } from 'react-native-elements';
 
-export default class MyHeader extends Component {
- render() {
+export default  MyHeader = ({showAddTodoList}) => {
+
    return (
         <Header 
             placement="left"
             leftComponent={{  color: '#fff' }}
-            centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-            rightComponent={{ color: '#fff' }}
+            centerComponent={{ text: 'My Todo List', style: { color: '#fff' } }}
+            rightComponent={<Button
+                title="+"
+                onPress={showAddTodoList}
+            />}
           />
    );
- }
-}
+};
