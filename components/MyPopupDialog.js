@@ -1,4 +1,4 @@
-import realm, { createTodoList } from '../database/allSchemas';
+import realm, { createTodoList, getTodoList, updateTodoList } from '../database/allSchemas';
 import React, { Component } from 'react';
 
 import {
@@ -10,21 +10,38 @@ export default class MyPopupDialog extends Component {
   constructor(props){
     super(props);
     this.state = {
-      isVisible:true,
+      isVisible:false,
       name:'',
+      todoListId: '',
+      mode: 'NEW',
     };
   }
   createNewTodoList() {
     return createTodoList({name:this.state.name}).then(response => console.log(response)).catch(e => console.log(e));
   }
+  editTodoList() {
+    return updateTodoList({id:this.state.todoListId,name:this.state.name}).then(response => console.log(response)).catch(e => console.log(e));
+  }
   closeDialog() {
-    this.setState({ isVisible: false });
+    this.setState({ 
+      isVisible: false,
+      todoListId: '',
+      name:'',
+      mode: 'NEW',
+    });
     if(this.props.onUpdate){
       this.props.onUpdate();
     }
   }
-  openDialog() {
-    this.setState({ isVisible: true, name:'' });
+  async openDialog({id,mode}) {
+    if(id){
+      const {name} = (await getTodoList({id}));
+      this.setState({
+        todoListId: id,
+        name,
+      })
+    }
+    this.setState({ isVisible: true,mode});
   }
  render() {
    return (
@@ -42,8 +59,14 @@ export default class MyPopupDialog extends Component {
         onChangeText={(text) => this.setState({name:text})}
       />
       <Button
-        title='Add Todo List'
-        onPress={() => this.createNewTodoList().then(()=> this.closeDialog())}
+        title='Save Todo List'
+        onPress={() => {
+          if(this.state.mode === 'NEW'){
+            this.createNewTodoList().then(()=> this.closeDialog())
+          } else {
+            this.editTodoList().then(()=> this.closeDialog())
+          }
+        }}
       />
       <Button
         title='Cancel'

@@ -65,12 +65,12 @@ export const createTodoList = ({name}) => {
     })
 }
 // UPDATE
-export const setTodoList = todoList => {
+export const updateTodoList = ({id,name}) => {
     return new Promise((resolve,reject) => {
         Realm.open(databasOptions).then(realm => {
             realm.write(() => {
-                let todoListToUpdate = realm.objectForPrimaryKey(TODOLIST_SCHEMA, todoList.id);
-                todoListToUpdate.name = todoList.name;
+                let todoListToUpdate = realm.objectForPrimaryKey(TODOLIST_SCHEMA, id);
+                todoListToUpdate.name = name;
                 resolve(todoListToUpdate);
             })
         }).catch((error) => {
@@ -79,13 +79,27 @@ export const setTodoList = todoList => {
     })
 }
 // DELETE
-export const deleteTodoList = todoList => {
+export const deleteTodoList = ({id}) => {
     return new Promise((resolve,reject) => {
         Realm.open(databasOptions).then(realm => {
             realm.write(() => {
-                const todoListToDelete = realm.objectForPrimaryKey(TODOLIST_SCHEMA, todoList.id);
+                const todoListToDelete = realm.objectForPrimaryKey(TODOLIST_SCHEMA, id);
                 realm.delete(todoListToDelete)
                 resolve();
+            })
+        }).catch((error) => {
+            reject(error);
+        })
+    })
+}
+
+// GET ONE
+export const getTodoList = ({id}) => {
+    return new Promise((resolve,reject) => {
+        Realm.open(databasOptions).then(realm => {
+            realm.write(() => {
+                const todoList = realm.objectForPrimaryKey(TODOLIST_SCHEMA, id);
+                resolve(todoList);
             })
         }).catch((error) => {
             reject(error);

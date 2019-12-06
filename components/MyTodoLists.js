@@ -13,10 +13,10 @@ export default MyTodoLists = ({todoLists = [],editPressed,deletePressed}) => {
         todoLists.map((l, i) => (
           <MySwipeoutOnTodoList
             title={l.name}
-            subtitle={l.id}
+            subtitle={l.creationDate.toString()}
             key={l.id}
-            editPressed={editPressed}
-            deletePressed={deletePressed}
+            editPressed={() => editPressed({id:l.id})}
+            deletePressed={() => deletePressed({id:l.id})}
           />
         ))
       }

@@ -1,4 +1,4 @@
-import realm, { getTodoLists } from '../database/allSchemas';
+import realm, { getTodoLists,deleteTodoList } from '../database/allSchemas';
 import React, { Component } from 'react';
 
 import {
@@ -27,15 +27,22 @@ export default class MyApp extends Component {
     }
     console.log('reloadData',this.state.todoLists);
   }
+  openDialog({id,mode}){
+    this.myPopupDialogRef.current.openDialog({id,mode});
+  }
+  deleteTodoList({id}){
+    deleteTodoList({id});
+    this.reloadData();
+  }
  render() {
    return (
     <View>
       <MyHeader 
-        showAddTodoList={() => this.myPopupDialogRef.current.openDialog()}
+        showAddTodoList={() => this.openDialog({mode:'NEW'})}
       />
       <MyTodoLists todoLists={this.state.todoLists} 
-            editPressed={() => this.editPressed()}
-            deletePressed={() => this.deletePressed()}
+            editPressed={(params) => this.openDialog({...params,mode:'EDIT'})}
+            deletePressed={(params) => this.deleteTodoList(params)}
             />
       <MyPopupDialog ref={this.myPopupDialogRef} onUpdate={() => this.reloadData()}/>
     </View>
