@@ -128,7 +128,7 @@ export const getTodoLists = todoList => {
         Realm.open(databasOptions).then(realm => {
             realm.write(() => {
                 const allTodoList = realm.objects(TODOLIST_SCHEMA);
-                resolve(allTodoList);
+                resolve(allTodoList.slice(0,1000));
             })
         }).catch((error) => {
             reject(error);
@@ -136,4 +136,27 @@ export const getTodoLists = todoList => {
     })
 }
 
+export const massUpdate = todoLists => {
+    return new Promise((resolve,reject) => {
+        Realm.open(databasOptions).then(realm => {  
+            realm.write(() => {
+                let todoListToUpdate = realm.objects(TODOLIST_SCHEMA);
+                idsToUpdate = todoLists.forEach((todoList,index) => {
+                    if(!todoList || index > 10000) return;
+                    const toUpdate = todoListToUpdate.find(x => x.id === todoList.id);
+                    if(toUpdate){
+                        console.log('UPDATE')
+                        toUpdate.name = todoList.name || 'NO_NAME';
+                    } else {
+                        if(index%1000 === 0) console.log('NEW');
+                        realm.create(TODOLIST_SCHEMA, {...todoList, creationDate: new Date()});
+                    }
+                })
+                resolve();
+            })
+        }).catch((error) => {
+            reject(error);
+        })
+    })
+}
 export default new Realm(databasOptions);

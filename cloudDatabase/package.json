@@ -1,0 +1,12 @@
+{
+  "name": "cloudDatabase",
+  "version": "1.0.0",
+  "main": "mongodb.js",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^3.3.5"
+  },
+  "scripts": {
+    "start": "node mongodb.js"
+  }
+}

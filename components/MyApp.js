@@ -1,8 +1,9 @@
-import realm, { getTodoLists,deleteTodoList } from '../database/allSchemas';
+import realm, { getTodoLists,deleteTodoList,massUpdate } from '../database/allSchemas';
 import React, { Component } from 'react';
 
 import {
   View,
+  Text,
 } from 'react-native';
 import MyHeader from './MyHeader';
 import MyTodoLists from './MyTodoLists';
@@ -27,6 +28,24 @@ export default class MyApp extends Component {
     }
     console.log('reloadData',this.state.todoLists);
   }
+  async syncDatabase() {
+    const response = await fetch('http://localhost:9000/graphql', {
+      method:'POST',
+
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({query:'{ todoLists { id, name } }'})
+   })
+
+   const rsponseBody = await response.json();
+   console.log("start of massUpdate")
+   await massUpdate(rsponseBody.data.todoLists);
+   console.log("end of massUpdate")
+   this.reloadData();
+   console.log("end of reloadData")
+   return rsponseBody.data.todoLists;
+
+   console.log("end of function")
+  }
   openDialog({id,mode}){
     this.myPopupDialogRef.current.openDialog({id,mode});
   }
@@ -38,6 +57,7 @@ export default class MyApp extends Component {
    return (
     <View>
       <MyHeader 
+        syncPressed={() => this.syncDatabase()}
         showAddTodoList={() => this.openDialog({mode:'NEW'})}
       />
       <MyTodoLists todoLists={this.state.todoLists} 

@@ -1,0 +1,9 @@
+type Query {
+   greeting:String
+   todoLists:[TodoList]
+}
+
+type TodoList {
+   id:ID!
+   name:String
+}
